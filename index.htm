@@ -1,21 +1,40 @@
 <!DOCTYPE html>
 
 <head>
-    <title>Capture and Upload</title>
-    <script type="text/javascript" src="http://www.dynamsoft.com/library/dcs/dynamsoft.camera.min.js">
+<title>Capture and Upload</title>
+<script type="text/javascript" src="http://www.dynamsoft.com/library/dcs/dynamsoft.camera.min.js">
     </script>
+<style type="text/css">
+body { padding: 40px 10px; margin: 0; }
+h1 { margin: 0 0 30px 26px; }
+#main { width:985px; margin:0 auto;}
+.clearfix:after { display: table; content: ''; clear: both; }
+.d-btn { display: inline-block; padding: 0 25px; height: 38px; line-height: 32px; color: #fe8e14; font-family: OpenSans-Semibold; font-size: 14px; text-align: center; cursor: pointer; border: solid 2px #fe8e14; border-radius: 3px; -webkit-border-radius: 3px; -moz-border-radius: 3px; -o-border-radius: 3px; -webkit-transition: all .2s ease-in-out; -moz-transition: all .2s ease-in-out; -ms-transition: all .2s ease-in-out; -o-transition: all .2s ease-in-out; transition: all .2s ease-in-out; }
+.d-btn:link, .d-btn:visited { color: #fe8e14; }
+.d-btn:hover { color: #ffae38; border: solid 2px #ffae38; }
+.d-btn.bgBlue { border-color: #50a8e1; background: #50a8e1; color: #fff; }
+.d-btn.bgBlue:hover { border-color: #61c2ec; background: #61c2ec; }
+.btn-disabled-mobile.disabled { border-color: #aaa !important; color: #aaa !important; background: #fff !important; }
+#btn-grp { margin: 0 0 30px 26px; }
+#btn-grp select { height: 38px; min-width: 220px; border-radius: 3px; -webkit-border-radius: 3px; -moz-border-radius: 3px; -o-border-radius: 3px; cursor: pointer; }
+#btn-grp .capture { margin: 0 15px; }
+</style>
 </head>
 
 <body>
-    <h1>Dynamsoft Camera SDK: Capture & Upload</h1>
-    <select size="1" id="source" width="220px" onchange="onSourceChanged()"></select>
-    <input type="button" value="Capture" onclick="onCapture();" />
-    <input type="button" value="Upload" onclick="onUpload();" />
-
-    <div id="video-container"></div>
-    <div id="image-container"></div>
-
-    <script type="text/javascript">
+<div id="main">
+<h1>Dynamsoft Camera SDK: Capture & Upload</h1>
+<div id="btn-grp">
+    <select size="1" id="source" onchange="onSourceChanged()">
+    </select>
+    <input type="button" value="Capture" class="d-btn bgBlue capture" onclick="onCapture();" />
+    <input type="button" value="Upload" class="d-btn bgBlue" onclick="onUpload();" />
+</div>
+<div class="clearfix">
+    <div id="video-container" style="float:left;"></div>
+    <div id="image-container" style="float:left;"></div>
+</div>
+<script type="text/javascript">
         var dcsObject, imageViewer;
         var width = 480,
             height = 320;
@@ -120,6 +139,6 @@
             if (dcsObject) dcsObject.destroy();
         };
     </script>
+   </div>
 </body>
-
 </html>
