@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+
+<head>
+    <title>Capture and Upload</title>
+    <script type="text/javascript" src="http://www.dynamsoft.com/library/dcs/dynamsoft.camera.min.js">
+    </script>
+</head>
+
+<body>
+    <h1>Dynamsoft Camera SDK: Capture & Upload</h1>
+    <select size="1" id="source" width="220px" onchange="onSourceChanged()"></select>
+    <input type="button" value="Capture" onclick="onCapture();" />
+    <input type="button" value="Upload" onclick="onUpload();" />
+
+    <div id="video-container"></div>
+    <div id="image-container"></div>
+
+    <script type="text/javascript">
+        var dcsObject, imageViewer;
+        var width = 480,
+            height = 320;
+
+        /**
+         * Capture images
+         * 
+         */
+        function onInitSuccess(videoViewerId, imageViewerId) {
+
+            dcsObject = dynamsoft.dcsEnv.getObject(videoViewerId);
+            dcsObject.videoviewer.setWidth(width);
+            dcsObject.videoviewer.setHeight(height);
+            imageViewer = dcsObject.getImageViewer(imageViewerId);
+            imageViewer.ui.setWidth(width);
+            imageViewer.ui.setHeight(height);
+            var cameraList = dcsObject.camera.getCameraList();
+            for (var i = 0; i < cameraList.length; i++) {
+                document.getElementById("source").options.add(new Option(cameraList[i], i));
+            }
+
+            if (cameraList.length > 0) {
+                dcsObject.camera.takeCameraOwnership(cameraList[0]);
+                dcsObject.camera.playVideo();
+            } else {
+                alert('No camera is connected.');
+            }
+        }
+
+        function onInitFailure(errorCode, errorString) {
+            alert('Init failed: ' + errorString);
+        }
+
+        function onSourceChanged() {
+            if (!dcsObject) return;
+            var source = document.getElementById("source");
+            var camera = source.options[source.selectedIndex].text;
+            dcsObject.camera.takeCameraOwnership(camera);
+            dcsObject.camera.playVideo();
+        }
+
+        function onCapture() {
+            if (!dcsObject) return;
+            dcsObject.camera.captureImage('image-container');
+            if (dcsObject.getErrorCode() !== EnumDCS_ErrorCode.OK) {
+                alert('Capture error: ' + dcsObject.getErrorString());
+            }
+        }
+
+        /**
+         * Upload images
+         * 
+         */
+        function onUploadSuccess() {
+            alert('Image successfully uploaded!');
+        }
+
+        function onUploadFailure(errorCode, errorString) {
+            alert('Upload failed: ' + errorString);
+        }
+
+        function getCurPagePath() {
+            var strHttpServer = location.protocol + '//' +
+                location.hostname +
+                (location.port === '' ? '' : ':' + location.port),
+                curPathName = unescape(location.pathname),
+                curPath = curPathName.substring(0, curPathName.lastIndexOf("/") + 1);
+
+            return strHttpServer + curPath;
+        }
+
+        function onUpload() {
+            if (!dcsObject || !imageViewer) return;
+
+            if (imageViewer.image.getCount() === 0) {
+                alert('Please grab an image first.');
+                return;
+            }
+
+            var counter,
+                url = getCurPagePath() + 'upload',
+                fileName = new Date().getMilliseconds() + '.jpg',
+                imageType = imageViewer.io.EnumImageType.JPEG,
+                bMultiImages = false,
+                imageIndexArray = [];
+
+            if (bMultiImages) {
+                for (counter = 0; counter < imageViewer.image.getCount(); counter++) imageIndexArray.push(counter);
+            } else imageIndexArray.push(imageViewer.image.getIndex());
+
+            imageViewer.io.setHTTPFormFields({
+                "fileName": fileName
+            });
+            imageViewer.io.httpUploadAsync(url, imageIndexArray, imageType, onUploadSuccess, onUploadFailure);
+        }
+
+        // Initialize DCS
+        dynamsoft.dcsEnv.init('video-container', 'image-container', onInitSuccess, onInitFailure);
+
+        // Destroy DCS
+        window.onbeforeunload = function () {
+            if (dcsObject) dcsObject.destroy();
+        };
+    </script>
+</body>
+
+</html>

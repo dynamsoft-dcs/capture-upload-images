@@ -1,0 +1,22 @@
+{
+  "name": "dcs-nodejs",
+  "version": "1.0.0",
+  "description": "Using Dynamsoft Camera SDK and Node.js to capture and upload images in web browsers.",
+  "main": "server.js",
+  "dependencies": {
+    "express": "^4.15.2",
+    "formidable": "^1.1.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "keywords": [
+    "JavaScript",
+    "Camera",
+    "SDK"
+  ],
+  "author": "Dynamsoft",
+  "license": "MIT"
+}
